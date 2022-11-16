@@ -10,9 +10,9 @@ cAge int
 create table order1 (
 oID int auto_increment primary key,
 cID int,
+foreign key (cID) references customer(cID),
 oDate date,
-oTotalPrice double,
-foreign key (cID) references customer(cID)
+oTotalPrice double
 );
 
 create table product (
@@ -29,5 +29,3 @@ primary key(id_od,id_pr),
 foreign key(id_od) references order1(oID),
 foreign key(id_pr) references product(pID)
 );
-
--- drop database sales_manager;
