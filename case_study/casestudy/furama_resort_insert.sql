@@ -1,5 +1,6 @@
 use furama_resort_tables;
 
+-- 1. Thêm mới thông tin cho tất cả các bảng có trong CSDL để có thể thoả mãn các yêu cầu bên dưới.
 -- Thêm dữ liệu vào vi_tri
 insert into vi_tri
 values (1, 'Quản Lý'),
@@ -104,3 +105,4 @@ INSERT INTO hop_dong_chi_tiet (ma_hop_dong_chi_tiet, so_luong, ma_hop_dong, ma_d
 INSERT INTO hop_dong_chi_tiet (ma_hop_dong_chi_tiet, so_luong, ma_hop_dong, ma_dich_vu_di_kem) VALUES ('6', '1', '1', '3');
 INSERT INTO hop_dong_chi_tiet (ma_hop_dong_chi_tiet, so_luong, ma_hop_dong, ma_dich_vu_di_kem) VALUES ('7', '2', '1', '2');
 INSERT INTO hop_dong_chi_tiet (ma_hop_dong_chi_tiet, so_luong, ma_hop_dong, ma_dich_vu_di_kem) VALUES ('8', '2', '12', '2');
+
