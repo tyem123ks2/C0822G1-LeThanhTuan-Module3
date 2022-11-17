@@ -15,4 +15,5 @@ where m.mark
 select s.studentID, s.studentName, s.address, s.phone, s.status, s.classID, AVG(mark) as AVG_Mark
 from student as s
 inner join mark as m on s.studentID = m.studentID 
-group by s.studentID, s.studentName;
+group by s.studentID, s.studentName
+order by AVG_Mark desc;
