@@ -34,8 +34,6 @@ explain select * from Product where productCode;
 explain select * from Product where productCode = 'M41';
 EXPLAIN SELECT * FROM Product WHERE productCode = 'M41' or productCode = 'L78';
 
--- So sánh câu truy vấn trước và sau khi tạo index
-
 -- Tạo view lấy về các thông tin: productCode, productName, productPrice, productStatus từ bảng products.
 create view w_product as
 select productCode, productName, productPrice, productStatus from Product;
