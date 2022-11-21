@@ -131,21 +131,60 @@ group by hd.ma_nhan_vien
 having count(ma_hop_dong) <= 3;
 
 -- 16.	Xóa những Nhân viên chưa từng lập được hợp đồng nào từ năm 2019 đến năm 2021.
-
+set SQL_SAFE_UPDATES = 0;
+delete from nhan_vien nv1
+where nv1.ma_nhan_vien in 
+(select * from
+(
+select nv.ma_nhan_vien
+from nhan_vien as nv
+left join hop_dong as hd on nv.ma_nhan_vien = hd.ma_nhan_vien
+where hd.ma_nhan_vien is null) 
+as tb);
 
 
 -- 17.	Cập nhật thông tin những khách hàng có ten_loai_khach từ Platinum lên Diamond, chỉ cập nhật những khách hàng đã từng đặt phòng với Tổng Tiền thanh toán trong năm 2021 là lớn hơn 10.000.000 VNĐ.
+UPDATE loai_khach lk1 SET ten_loai_khach = 'Diamond', ma_loai_khach = '1'
+where lk1.ma_loai_khach in (
+select * from 
+(
+select lk.ma_loai_khach
+from khach_hang as kh
+left join loai_khach as lk on lk.ma_loai_khach = kh.ma_loai_khach
+left join hop_dong as hd on hd.ma_khach_hang = kh.ma_khach_hang
+left join dich_vu as dv on dv.ma_dich_vu = hd.ma_dich_vu
+left join hop_dong_chi_tiet as hdc on hdc.ma_hop_dong = hd.ma_hop_dong
+left join dich_vu_di_kem as dvk on dvk.ma_dich_vu_di_kem = hdc.ma_dich_vu_di_kem
+where ten_loai_khach = 'Plantinium'
+group by hd.ma_hop_dong
+) 
+as ga);
 
 
 
 -- 18.	Xóa những khách hàng có hợp đồng trước năm 2021 (chú ý ràng buộc giữa các bảng).
-
-
+set FOREIGN_KEY_CHECKS = 0;
+delete from khach_hang as kh1
+where kh1.ma_khach_hang in (
+select * from (
+select kh.ma_khach_hang
+from hop_dong as hd
+inner join khach_hang as kh on kh.ma_khach_hang = hd.ma_khach_hang
+where ngay_lam_hop_dong between '2020-01-01' AND '2020-12-31'
+)  as tb );
 
 -- 19.	Cập nhật giá cho các dịch vụ đi kèm được sử dụng trên 10 lần trong năm 2020 lên gấp đôi.
-
-
-
+update dich_vu_di_kem set gia = gia*2
+where ma_dich_vu_di_kem not in
+(select hdc.ma_dich_vu_di_kem 
+from hop_dong_chi_tiet as hdc
+group by hdc.ma_dich_vu_di_kem
+having sum(hdc.so_luong) <=10);
 
 -- 20.	Hiển thị thông tin của tất cả các nhân viên và khách hàng có trong hệ thống, thông tin hiển thị bao gồm id (ma_nhan_vien, ma_khach_hang), ho_ten, email, so_dien_thoai, ngay_sinh, dia_chi.
+select nv.ma_nhan_vien ID, nv.ho_ten, nv.email, nv.ngay_sinh, nv.so_dien_thoai, nv.dia_chi from nhan_vien as nv
+union
+select kh.ma_khach_hang ID, kh.ho_ten, kh.email, kh.ngay_sinh, kh.so_dien_thoai, kh.dia_chi from khach_hang as kh;
 
+
+-- delete from khach_hang as kh1 where kh1.ma_khach_hang in ( select * from ( select kh.ma_khach_hang from hop_dong as hd inner join khach_hang as kh on kh.ma_khach_hang = hd.ma_khach_hang where ngay_lam_hop_dong between '2020-01-01' AND '2020-12-31' )  as tb )
