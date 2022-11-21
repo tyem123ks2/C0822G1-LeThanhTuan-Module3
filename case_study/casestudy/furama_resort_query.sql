@@ -103,17 +103,32 @@ group by hd.ma_hop_dong;
 
 
 -- 13.	Hiển thị thông tin các Dịch vụ đi kèm được sử dụng nhiều nhất bởi các Khách hàng đã đặt phòng. (Lưu ý là có thể có nhiều dịch vụ có số lần sử dụng nhiều như nhau).
-select dvc. *
-from dich_vu_di_kem as dvc;
-
+select dvc.ma_dich_vu_di_kem, dvc.ten_dich_vu_di_kem, sum(hdc.so_luong) as so_luong_dich_vu_di_kem
+from dich_vu_di_kem as dvc
+inner join hop_dong_chi_tiet as hdc on hdc.ma_dich_vu_di_kem = dvc.ma_dich_vu_di_kem
+group by dvc.ma_dich_vu_di_kem
+having sum(hdc.so_luong) = (select max(hdc.so_luong) from hop_dong_chi_tiet as hdc);
 
 -- 14.	Hiển thị thông tin tất cả các Dịch vụ đi kèm chỉ mới được sử dụng một lần duy nhất. Thông tin hiển thị bao gồm ma_hop_dong, ten_loai_dich_vu, ten_dich_vu_di_kem, so_lan_su_dung (được tính dựa trên việc count các ma_dich_vu_di_kem).
-
+select hdc.ma_hop_dong, ldv.ten_loai_dich_vu, dvc.ten_dich_vu_di_kem, count(dvc.ma_dich_vu_di_kem) as so_lan_su_dung
+from hop_dong_chi_tiet as hdc 
+inner join dich_vu_di_kem as dvc on hdc.ma_dich_vu_di_kem = dvc.ma_dich_vu_di_kem
+inner join hop_dong as hd on hdc.ma_hop_dong = hd.ma_hop_dong
+inner join dich_vu as dv on hd.ma_dich_vu = dv.ma_dich_vu
+inner join loai_dich_vu as ldv on dv.ma_loai_dich_vu = ldv.ma_loai_dich_vu
+group by dvc.ma_dich_vu_di_kem 
+having count(dvc.ma_dich_vu_di_kem) = 1
+order by hd.ma_hop_dong;
 
 
 -- 15.	Hiển thi thông tin của tất cả nhân viên bao gồm ma_nhan_vien, ho_ten, ten_trinh_do, ten_bo_phan, so_dien_thoai, dia_chi mới chỉ lập được tối đa 3 hợp đồng từ năm 2020 đến 2021.
-
-
+select nv.ma_nhan_vien, nv.ho_ten, td.ten_trinh_do, bp.ten_bo_phan, nv.so_dien_thoai, nv.dia_chi 
+from nhan_vien as nv 
+inner join hop_dong as hd on nv.ma_nhan_vien = hd.ma_nhan_vien
+inner join trinh_do as td on nv.ma_trinh_do = td.ma_trinh_do
+inner join bo_phan as bp on nv.ma_bo_phan = bp.ma_bo_phan
+group by hd.ma_nhan_vien 
+having count(ma_hop_dong) <= 3;
 
 -- 16.	Xóa những Nhân viên chưa từng lập được hợp đồng nào từ năm 2019 đến năm 2021.
 
