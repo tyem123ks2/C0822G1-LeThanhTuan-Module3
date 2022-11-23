@@ -1,7 +1,9 @@
 use furama_resort_tables;
 
 -- 2.Hiển thị thông tin của tất cả nhân viên có trong hệ thống có tên bắt đầu là một trong các ký tự “H”, “T” hoặc “K” và có tối đa 15 kí tự.
-select * from nhan_vien where ho_ten like 'H%' or ho_ten like 'T%' or ho_ten like'K%' and length(ho_ten) <= 15;
+select * from nhan_vien 
+where SUBSTRING_INDEX(ho_ten," ", -1) like 'H%' 
+and length(ho_ten) < 15;
 
 -- 3.Hiển thị thông tin của tất cả khách hàng có độ tuổi từ 18 đến 50 tuổi và có địa chỉ ở “Đà Nẵng” hoặc “Quảng Trị”.
 select * from khach_hang 
@@ -21,7 +23,8 @@ order by Amount ASC;
 
 -- 5.Hiển thị ma_khach_hang, ho_ten, ten_loai_khach, ma_hop_dong, ten_dich_vu, ngay_lam_hop_dong, ngay_ket_thuc, tong_tien (Với tổng tiền được tính theo công thức như sau: Chi Phí Thuê + Số Lượng * Giá, với Số Lượng và Giá là từ bảng dich_vu_di_kem, hop_dong_chi_tiet) cho tất cả các khách hàng đã từng đặt phòng. (những khách hàng nào chưa từng đặt phòng cũng phải hiển thị ra).
 select kh.ma_khach_hang, kh.ho_ten, lk.ten_loai_khach, hd.ma_hop_dong, dv.ten_dich_vu, hd.ngay_lam_hop_dong, hd.ngay_ket_thuc,
-sum((ifnull(dv.chi_phi_thue, 0) + ifnull(hdc.so_luong * dvk.gia, 0))) as tongtien
+-- sum(ifnull(dv.chi_phi_thue, 0) + ifnull(hdc.so_luong * dvk.gia, 0)) as tongtien
+ifnull(dv.chi_phi_thue, 0) + sum(ifnull(hdc.so_luong * dvk.gia, 0)) as tongtien
 from khach_hang as kh
 left join loai_khach as lk on lk.ma_loai_khach = kh.ma_loai_khach
 left join hop_dong as hd on hd.ma_khach_hang = kh.ma_khach_hang
@@ -40,7 +43,6 @@ where dv.ma_dich_vu not in
 where ngay_lam_hop_dong between '2021-01-01' AND '2021-03-31')
 group by dv.ma_dich_vu
 order by dien_tich DESC;
-
 -- 7. Hiển thị thông tin ma_dich_vu, ten_dich_vu, dien_tich, so_nguoi_toi_da, chi_phi_thue, ten_loai_dich_vu của tất cả các loại dịch vụ đã từng được khách hàng đặt phòng trong năm 2020 nhưng chưa từng được khách hàng đặt phòng trong năm 2021.
 select dv.ma_dich_vu, dv.ten_dich_vu, dv.dien_tich, dv.chi_phi_thue, ldv.ten_loai_dich_vu 
 from dich_vu as dv
@@ -57,13 +59,16 @@ group by dv.ma_dich_vu;
 
 -- 8. Hiển thị thông tin ho_ten khách hàng có trong hệ thống, với yêu cầu ho_ten không trùng nhau. Học viên sử dụng theo 3 cách khác nhau để thực hiện yêu cầu trên.
 -- Cách 1: Dùng "distinct"
-	select distinct ho_ten from khach_hang;
-    
+	select distinct ho_ten from khach_hang
+    order by ho_ten;
 -- Cách 2: Dùng Group by
 	select ho_ten from khach_hang
 	group by ho_ten;
     
--- Cách 3: 
+-- Cách 3: sử dụng union
+	select ho_ten from khach_hang 
+    union
+    select ho_ten from khach_hang;
 
 -- 9. Thực hiện thống kê doanh thu theo tháng, nghĩa là tương ứng với mỗi tháng trong năm 2021 thì sẽ có bao nhiêu khách hàng thực hiện đặt phòng.
 select month(ngay_lam_hop_dong) as thang_co_don, count(ma_hop_dong) as so_don_dat_hang from hop_dong 
@@ -181,4 +186,43 @@ select nv.ma_nhan_vien ID, nv.ho_ten, nv.email, nv.ngay_sinh, nv.so_dien_thoai, 
 union
 select kh.ma_khach_hang ID, kh.ho_ten, kh.email, kh.ngay_sinh, kh.so_dien_thoai, kh.dia_chi from khach_hang as kh;
 
--- delete from khach_hang as kh1 where kh1.ma_khach_hang in ( select * from ( select kh.ma_khach_hang from hop_dong as hd inner join khach_hang as kh on kh.ma_khach_hang = hd.ma_khach_hang where ngay_lam_hop_dong between '2020-01-01' AND '2020-12-31' )  as tb )
+-- 21.	Tạo khung nhìn có tên là v_nhan_vien để lấy được thông tin của tất cả các nhân viên có địa chỉ là “Hải Châu” và đã từng lập hợp đồng cho một hoặc nhiều khách hàng bất kì với ngày lập hợp đồng là “12/12/2019”.
+create view v_nhan_vien 
+as select * from nhan_vien;
+
+
+-- 22.	Thông qua khung nhìn v_nhan_vien thực hiện cập nhật địa chỉ thành “Liên Chiểu” đối với tất cả các nhân viên được nhìn thấy bởi khung nhìn này.
+
+
+
+-- 23.	Tạo Stored Procedure sp_xoa_khach_hang dùng để xóa thông tin của một khách hàng nào đó với ma_khach_hang được truyền vào như là 1 tham số của sp_xoa_khach_hang.
+
+
+
+-- 24.	Tạo Stored Procedure sp_them_moi_hop_dong dùng để thêm mới vào bảng hop_dong với yêu cầu sp_them_moi_hop_dong phải thực hiện kiểm tra tính hợp lệ của dữ liệu bổ sung, với nguyên tắc không được trùng khóa chính và đảm bảo toàn vẹn tham chiếu đến các bảng liên quan.
+
+
+
+-- 25.	Tạo Trigger có tên tr_xoa_hop_dong khi xóa bản ghi trong bảng hop_dong thì hiển thị tổng số lượng bản ghi còn lại có trong bảng hop_dong ra giao diện console của database.
+
+
+
+-- 26.	Tạo Trigger có tên tr_cap_nhat_hop_dong khi cập nhật ngày kết thúc hợp đồng, cần kiểm tra xem thời gian cập nhật có phù hợp hay không, với quy tắc sau: Ngày kết thúc hợp đồng phải lớn hơn ngày làm hợp đồng ít nhất là 2 ngày. Nếu dữ liệu hợp lệ thì cho phép cập nhật, nếu dữ liệu không hợp lệ thì in ra thông báo “Ngày kết thúc hợp đồng phải lớn hơn ngày làm hợp đồng ít nhất là 2 ngày” trên console của database. Lưu ý: Đối với MySQL thì sử dụng SIGNAL hoặc ghi log thay cho việc ghi ở console.
+
+
+
+-- 27.	Tạo Function thực hiện yêu cầu sau:
+
+
+
+-- a.	Tạo Function func_dem_dich_vu: Đếm các dịch vụ đã được sử dụng với tổng tiền là > 2.000.000 VNĐ.
+
+
+-- b.	Tạo Function func_tinh_thoi_gian_hop_dong: Tính khoảng thời gian dài nhất tính từ lúc bắt đầu làm hợp đồng đến lúc kết thúc hợp đồng mà khách hàng đã thực hiện thuê dịch vụ (lưu ý chỉ xét các khoảng thời gian dựa vào từng lần làm hợp đồng thuê dịch vụ, không xét trên toàn bộ các lần làm hợp đồng). Mã của khách hàng được truyền vào như là 1 tham số của function này.
+
+
+
+-- 28.	Tạo Stored Procedure sp_xoa_dich_vu_va_hd_room để tìm các dịch vụ được thuê bởi khách hàng với loại dịch vụ là “Room” từ đầu năm 2015 đến hết năm 2019 để xóa thông tin của các dịch vụ đó (tức là xóa các bảng ghi trong bảng dich_vu) và xóa những hop_dong sử dụng dịch vụ liên quan (tức là phải xóa những bản gi trong bảng hop_dong) và những bản liên quan khác
+
+
+
