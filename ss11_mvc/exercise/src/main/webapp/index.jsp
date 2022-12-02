@@ -11,6 +11,8 @@
     <title>$Title$</title>
   </head>
   <body>
-  $END$
+  <a href="product?action=list">Display product list</a>
+  <br>
+  <a href="product?action=add">Add product </a>
   </body>
 </html>

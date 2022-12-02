@@ -9,4 +9,5 @@ public interface IProductService {
     Product findById(int id);
     void add (Product product);
     boolean delete(int id);
+    void save (Product product);
 }
