@@ -11,6 +11,8 @@
     <title>$Title$</title>
   </head>
   <body>
-  $END$
+  <h1> USER-MANAGEMENT</h1>
+  <h2> Please choose </h2>
+  <a href="/users" > SHOW LIST USER </a>
   </body>
 </html>
