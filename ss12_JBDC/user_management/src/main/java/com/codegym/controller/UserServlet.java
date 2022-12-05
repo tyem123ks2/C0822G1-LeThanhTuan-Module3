@@ -153,6 +153,13 @@ public class UserServlet extends HttpServlet {
         request.setAttribute("listUser", listUser);
         RequestDispatcher dispatcher = request.getRequestDispatcher("user/list.jsp");
         dispatcher.forward(request, response);
+        boolean check = userDAO.deleteUser(id);
+        String mess = "Xóa thành công";
+        if (!check) {
+            mess = "Xóa không thành công";
+        }
+        request.setAttribute("mess",mess);
+        listUser(request, response);
     }
 
 }

@@ -175,10 +175,6 @@ public class UserDAO implements IUserDAO{
         }
     }
 
-    @Override
-    public void deleteUser(User user) throws SQLException {
-        String query = "{CALL delete_user(?)}";
-    }
 
     @Override
     public void addUserTransaction(User user, int[] permisions) {

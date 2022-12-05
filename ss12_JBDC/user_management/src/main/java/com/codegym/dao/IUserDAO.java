@@ -14,7 +14,6 @@ public interface IUserDAO {
 
     public List<User> selectAllUsers();
 
-
     public boolean updateUser(User user) throws SQLException;
 
     User getUserById(int id);
