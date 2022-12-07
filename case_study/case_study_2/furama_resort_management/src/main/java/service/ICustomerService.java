@@ -15,5 +15,5 @@ public interface ICustomerService {
 
     void editCustomer(Customer customer);
 
-    List<Customer> sreachCustomer(String keySreach);
+    List<Customer> searchCustomer(String keySearch);
 }

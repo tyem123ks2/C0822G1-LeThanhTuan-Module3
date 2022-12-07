@@ -1,6 +1,7 @@
 package model.person;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Customer extends Person{
     private int customerID;
@@ -21,6 +22,14 @@ public class Customer extends Person{
         this.customerID = customerID;
         this.customerType = customerType;
         this.address = address;
+    }
+
+    public Customer(String name, LocalDate birthday, boolean gender, String id, String phoneNumber, String email, int customerID) {
+        super(name, birthday, gender, id, phoneNumber, email);
+        this.customerID = customerID;
+    }
+
+    public Customer(String name, LocalTime birthday, boolean gender, String idCard, String phoneNumber, String email, String customerType, String address) {
     }
 
     public int getCustomerID() {

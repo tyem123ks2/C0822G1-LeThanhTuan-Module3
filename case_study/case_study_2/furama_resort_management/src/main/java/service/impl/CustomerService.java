@@ -36,7 +36,8 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public List<Customer> sreachCustomer(String keySreach) {
-        return this.customerRepository.sreachCustomer(keySreach);
+    public List<Customer> searchCustomer(String keySearch) {
+        return this.customerRepository.sreachCustomer(keySearch);
     }
 }
+

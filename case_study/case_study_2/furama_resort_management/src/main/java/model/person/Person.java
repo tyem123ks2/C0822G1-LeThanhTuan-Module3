@@ -38,7 +38,7 @@ public class Person {
         this.birthday = birthday;
     }
 
-    public boolean isGender() {
+    public boolean getGender() {
         return gender;
     }
 
