@@ -17,14 +17,14 @@ public class Customer extends Person{
         this.address = address;
     }
 
-    public Customer(String name, LocalDate birthday, boolean gender, String id, String phoneNumber, String email, int customerID, String customerType, String address) {
+    public Customer(String name, String birthday, boolean gender, String id, String phoneNumber, String email, int customerID, String customerType, String address) {
         super(name, birthday, gender, id, phoneNumber, email);
         this.customerID = customerID;
         this.customerType = customerType;
         this.address = address;
     }
 
-    public Customer(String name, LocalDate birthday, boolean gender, String id, String phoneNumber, String email, int customerID) {
+    public Customer(String name, String birthday, boolean gender, String id, String phoneNumber, String email, int customerID) {
         super(name, birthday, gender, id, phoneNumber, email);
         this.customerID = customerID;
     }

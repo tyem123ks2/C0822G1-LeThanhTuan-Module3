@@ -4,19 +4,19 @@ import model.person.Customer;
 import repository.ICustomerRepository;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerRepository implements ICustomerRepository {
     private String SELECT_ALL_CUSTOMER = "select * from `customer`";
-    private String ADD_NEW_CUSTOMER = "insert into furama_resort_management (customer_type_id, `name`, date_of_birth, `gender`, id_card, phone_number, email, address) " +
+    private String ADD_NEW_CUSTOMER = "insert into `customer` (customer_type_id, `name`, date_of_birth, `gender`, id_card, phone_number, email, address) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
     private String DELETE_CUSTOMER = "update customer set `status` = 0 where id = ?;";
     private String FIND_CUSTOMER_BY_ID = "select * from customer where id = ?;";
     private String EDIT_CUSTOMER = "update customer set name = ?, date_of_birth = ?, gender = ?, id_card = ?, phone_number = ?, email = ?, address = ? " +
             "where id = ? and `status` = 1;";
     private String SRACH_CUSTOMER = "select * from customer where customer_type_id = ?;";
+
     @Override
     public List<Customer> listCustomer() {
         List<Customer> customerList = new ArrayList<>();
@@ -27,9 +27,9 @@ public class CustomerRepository implements ICustomerRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int customerId = resultSet.getInt("id");
-                String typeCustomer = resultSet.getString("customer_type");
+                String typeCustomer = resultSet.getString("customer_type_id");
                 String name = resultSet.getString("name");
-                LocalDate birthDay = LocalDate.parse(resultSet.getString("date_of_birth"));
+                String birthDay = resultSet.getString("date_of_birth");
                 boolean gender = resultSet.getBoolean("gender");
                 String idCard = resultSet.getString("id_card");
                 String phone = resultSet.getString("phone_number");
@@ -88,7 +88,7 @@ public class CustomerRepository implements ICustomerRepository {
             ResultSet resultSet = preparedStatement.getResultSet();
             while (resultSet.next()) {
                 String name = resultSet.getString("name");
-                LocalDate birthDay = LocalDate.parse(resultSet.getString("date_of_birth"));
+                String birthDay = resultSet.getString("date_of_birth");
                 boolean gender = resultSet.getBoolean("gender");
                 String idCard = resultSet.getString("id_card");
                 String phone = resultSet.getString("phone_number");
@@ -135,7 +135,7 @@ public class CustomerRepository implements ICustomerRepository {
             while (resultSet.next()) {
 //                customer_type_id, `name`, date_of_birth, gender, id_card, phone_number, email, address
                 String name = resultSet.getString("customer_name");
-                LocalDate birthDay = LocalDate.parse(resultSet.getString("date_of_birth"));
+                String birthDay = resultSet.getString("date_of_birth");
                 boolean gender = resultSet.getBoolean("gender");
                 String idCard = resultSet.getString("id_card");
                 String phone = resultSet.getString("phone_number");

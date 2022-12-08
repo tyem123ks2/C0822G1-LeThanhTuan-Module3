@@ -80,7 +80,7 @@ public class CustomerServlet extends HttpServlet {
     private void updateCustomer(HttpServletRequest request, HttpServletResponse response) {
         int id = Integer.parseInt(request.getParameter("id"));
         String name = request.getParameter("nameCustomer");
-        LocalDate birthDay = LocalDate.parse(request.getParameter("birthDayCustomer"));
+        String birthDay = request.getParameter("birthDayCustomer");
         boolean genderCustomer = Boolean.parseBoolean(request.getParameter("genderCustomer"));
         String idCard = request.getParameter("idCard");
         String phoneNumber = request.getParameter("phoneCustomer");
@@ -139,8 +139,9 @@ public class CustomerServlet extends HttpServlet {
 
     private void showCustomerList(HttpServletRequest request, HttpServletResponse response) {
         List<Customer> customerList = customerService.listCustomer();
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/view/customer/list.jsp");
         request.setAttribute("customerList", customerList);
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("view/customer/list.jsp");
+
         try {
             requestDispatcher.forward(request, response);
         } catch (ServletException e) {

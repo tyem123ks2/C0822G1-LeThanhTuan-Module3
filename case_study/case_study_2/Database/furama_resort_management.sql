@@ -69,7 +69,7 @@ foreign key (username) references `user`(username)
 );
 
 create table `customer` (
-id int primary key,
+id int primary key auto_increment,
 customer_type_id int,
 foreign key(customer_type_id) references `customer_type`(id),
 name varchar(45),
@@ -127,5 +127,10 @@ primary key(role_id, username),
 foreign key(role_id) references `role`(role_id),
 foreign key(username) references `user`(username)
 );
+
+select * from `customer`;
+
+
+
 
 drop database furama_resort_management;
